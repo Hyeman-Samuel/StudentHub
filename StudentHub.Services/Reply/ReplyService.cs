@@ -46,8 +46,8 @@ namespace StudentHub.Services.Reply
             }
             else
             {
-                var reply = await _applicationDbContext.Set<Domain.Common.Reply>().FindAsync(replyId);
-                _applicationDbContext.Set<Domain.Common.Reply>().Remove(reply);
+                var reply = await _applicationDbContext.Set<Domain.Reply>().FindAsync(replyId);
+                _applicationDbContext.Set<Domain.Reply>().Remove(reply);
                 await _applicationDbContext.SaveChangesAsync();
 
                 resultModel.Data = reply.Id.ToString();
@@ -57,7 +57,7 @@ namespace StudentHub.Services.Reply
 
         public async Task<PagedResultModel<ReplyResponseDto>> GetReplies(Guid commentId,int index,int size)
         {
-            var repliesFromModel = _applicationDbContext.Set<Domain.Common.Reply>().Where(x => x.CommentRepliedToId == commentId).ToList().AsQueryable<Domain.Common.Reply>().OrderBy(x => x.CreatedAt);
+            var repliesFromModel = _applicationDbContext.Set<Domain.Reply>().Where(x => x.CommentRepliedToId == commentId).ToList().AsQueryable<Domain.Reply>().OrderBy(x => x.CreatedAt);
             var paginatedModel = repliesFromModel.Paginate(index, size);
             var replyDtos = new List<ReplyResponseDto>();
             foreach (var reply in paginatedModel.Items)

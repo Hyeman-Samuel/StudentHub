@@ -9,9 +9,9 @@ namespace StudentHub.Services.DtoMapper.Service
 {
     public class ReplyMapper : IReplyMapper
     {
-        public async Task<Domain.Common.Reply> ToModel(ReplyDto dto)
+        public async Task<Domain.Reply> ToModel(ReplyDto dto)
         {
-            var reply = new Domain.Common.Reply
+            var reply = new Domain.Reply
             {
                 CreatedAt = DateTime.Now,
                 Id = Guid.NewGuid(),
@@ -23,7 +23,7 @@ namespace StudentHub.Services.DtoMapper.Service
             return reply;
         }
 
-        public ReplyResponseDto ToResponseDto(Domain.Common.Reply model)
+        public ReplyResponseDto ToResponseDto(Domain.Reply model)
         {
             var replyResponse = new ReplyResponseDto
             {

@@ -13,7 +13,7 @@ namespace StudentHub.Services.Reply
         [Required]
         public string TimeAdded { get; set; }
         [Required]
-        public Guid CommentRepliedToId { get; set; }
+        public Guid? CommentRepliedToId { get; set; }
         public string AuthorId { get; set; }
     }
 
@@ -23,6 +23,6 @@ namespace StudentHub.Services.Reply
         public string Message { get; set; }
         public string TimeAdded { get; set; }
         public string AuthorId { get; set; }
-        public Guid CommentRepliedToId { get; set; }
+        public Guid? CommentRepliedToId { get; set; }
     }
 }

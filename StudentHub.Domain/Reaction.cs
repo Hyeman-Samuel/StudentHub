@@ -1,5 +1,4 @@
-﻿using StudentHub.Domain.Common;
-using StudentHub.Domain.Identity;
+﻿using StudentHub.Domain.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,11 +7,15 @@ using System.Text;
 
 namespace StudentHub.Domain
 {
-    public class Reaction : Entity
-    {   [Required]
+    public class Reaction
+    {
+        public Guid Id { get; set; }
+        public bool IsSoftDelete { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required]
         public ApplicationUser Responder { get; set; }
         [Required]
-        public string Vote { get; set; }
+        public Vote Vote { get; set; }
         public Guid? QuestionId { get; set; }
         public Question Question { get; set; }
         public Guid? SolutionId { get; set; }

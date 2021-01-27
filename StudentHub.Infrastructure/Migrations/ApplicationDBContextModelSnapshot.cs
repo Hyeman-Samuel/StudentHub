@@ -191,42 +191,6 @@ namespace StudentHub.Infrastructure.Migrations
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("StudentHub.Domain.Common.Reply", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("CommentRepliedToId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsSoftDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TimeAdded")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("CommentRepliedToId");
-
-                    b.ToTable("Reply");
-                });
-
             modelBuilder.Entity("StudentHub.Domain.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -364,6 +328,27 @@ namespace StudentHub.Infrastructure.Migrations
                     b.ToTable("Image");
                 });
 
+            modelBuilder.Entity("StudentHub.Domain.Join.QuestionTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("QuestionTag");
+                });
+
             modelBuilder.Entity("StudentHub.Domain.Question", b =>
                 {
                     b.Property<Guid>("Id")
@@ -417,9 +402,11 @@ namespace StudentHub.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Vote")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("SolutionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Vote")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -427,7 +414,45 @@ namespace StudentHub.Infrastructure.Migrations
 
                     b.HasIndex("ResponderId");
 
+                    b.HasIndex("SolutionId");
+
                     b.ToTable("Reaction");
+                });
+
+            modelBuilder.Entity("StudentHub.Domain.Reply", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("CommentRepliedToId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSoftDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TimeAdded")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("CommentRepliedToId");
+
+                    b.ToTable("Reply");
                 });
 
             modelBuilder.Entity("StudentHub.Domain.Solution", b =>
@@ -450,7 +475,7 @@ namespace StudentHub.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("QuestionId")
+                    b.Property<Guid>("QuestionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TimeAdded")
@@ -464,6 +489,30 @@ namespace StudentHub.Infrastructure.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("Solution");
+                });
+
+            modelBuilder.Entity("StudentHub.Domain.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSoftDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tag");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -535,19 +584,6 @@ namespace StudentHub.Infrastructure.Migrations
                         .HasForeignKey("SolutionId");
                 });
 
-            modelBuilder.Entity("StudentHub.Domain.Common.Reply", b =>
-                {
-                    b.HasOne("StudentHub.Domain.Identity.ApplicationUser", "Author")
-                        .WithMany("RepliesMade")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("StudentHub.Domain.Comment", "CommentRepliedTo")
-                        .WithMany("Replies")
-                        .HasForeignKey("CommentRepliedToId");
-                });
-
             modelBuilder.Entity("StudentHub.Domain.Image", b =>
                 {
                     b.HasOne("StudentHub.Domain.Question", "Question")
@@ -557,6 +593,21 @@ namespace StudentHub.Infrastructure.Migrations
                     b.HasOne("StudentHub.Domain.Solution", "Solution")
                         .WithMany("Images")
                         .HasForeignKey("SolutionId");
+                });
+
+            modelBuilder.Entity("StudentHub.Domain.Join.QuestionTag", b =>
+                {
+                    b.HasOne("StudentHub.Domain.Question", "Question")
+                        .WithMany("Questions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudentHub.Domain.Tag", "Tag")
+                        .WithMany("Questions")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StudentHub.Domain.Question", b =>
@@ -570,7 +621,7 @@ namespace StudentHub.Infrastructure.Migrations
 
             modelBuilder.Entity("StudentHub.Domain.Reaction", b =>
                 {
-                    b.HasOne("StudentHub.Domain.Question", null)
+                    b.HasOne("StudentHub.Domain.Question", "Question")
                         .WithMany("Reactions")
                         .HasForeignKey("QuestionId");
 
@@ -579,6 +630,24 @@ namespace StudentHub.Infrastructure.Migrations
                         .HasForeignKey("ResponderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("StudentHub.Domain.Solution", "Solution")
+                        .WithMany("Reactions")
+                        .HasForeignKey("SolutionId");
+                });
+
+            modelBuilder.Entity("StudentHub.Domain.Reply", b =>
+                {
+                    b.HasOne("StudentHub.Domain.Identity.ApplicationUser", "Author")
+                        .WithMany("RepliesMade")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudentHub.Domain.Comment", "CommentRepliedTo")
+                        .WithMany("Replies")
+                        .HasForeignKey("CommentRepliedToId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
                 });
 
             modelBuilder.Entity("StudentHub.Domain.Solution", b =>
@@ -592,7 +661,8 @@ namespace StudentHub.Infrastructure.Migrations
                     b.HasOne("StudentHub.Domain.Question", "Question")
                         .WithMany("Solutions")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

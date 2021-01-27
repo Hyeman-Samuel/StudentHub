@@ -48,6 +48,40 @@ namespace StudentHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshToken",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsSoftDelete = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    Token = table.Column<string>(nullable: true),
+                    JwtId = table.Column<string>(nullable: true),
+                    ExpiryDate = table.Column<DateTime>(nullable: false),
+                    IsUsed = table.Column<bool>(nullable: false),
+                    Invalidated = table.Column<bool>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tag",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsSoftDelete = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Type = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tag", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -177,29 +211,26 @@ namespace StudentHub.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reaction",
+                name: "QuestionTag",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    IsSoftDelete = table.Column<bool>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    ResponderId = table.Column<string>(nullable: false),
-                    Vote = table.Column<string>(nullable: false),
-                    QuestionId = table.Column<Guid>(nullable: true)
+                    TagId = table.Column<Guid>(nullable: false),
+                    QuestionId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reaction", x => x.Id);
+                    table.PrimaryKey("PK_QuestionTag", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reaction_Question_QuestionId",
+                        name: "FK_QuestionTag_Question_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Question",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reaction_AspNetUsers_ResponderId",
-                        column: x => x.ResponderId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_QuestionTag_Tag_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tag",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -214,7 +245,7 @@ namespace StudentHub.Infrastructure.Migrations
                     Message = table.Column<string>(nullable: false),
                     TimeAdded = table.Column<string>(nullable: false),
                     AuthorId = table.Column<string>(nullable: false),
-                    QuestionId = table.Column<Guid>(nullable: true)
+                    QuestionId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -292,6 +323,41 @@ namespace StudentHub.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Image_Solution_SolutionId",
+                        column: x => x.SolutionId,
+                        principalTable: "Solution",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reaction",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    IsSoftDelete = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    ResponderId = table.Column<string>(nullable: false),
+                    Vote = table.Column<int>(nullable: false),
+                    QuestionId = table.Column<Guid>(nullable: true),
+                    SolutionId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reaction", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reaction_Question_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Question",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reaction_AspNetUsers_ResponderId",
+                        column: x => x.ResponderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reaction_Solution_SolutionId",
                         column: x => x.SolutionId,
                         principalTable: "Solution",
                         principalColumn: "Id",
@@ -397,6 +463,16 @@ namespace StudentHub.Infrastructure.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_QuestionTag_QuestionId",
+                table: "QuestionTag",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionTag_TagId",
+                table: "QuestionTag",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reaction_QuestionId",
                 table: "Reaction",
                 column: "QuestionId");
@@ -405,6 +481,11 @@ namespace StudentHub.Infrastructure.Migrations
                 name: "IX_Reaction_ResponderId",
                 table: "Reaction",
                 column: "ResponderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reaction_SolutionId",
+                table: "Reaction",
+                column: "SolutionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reply_AuthorId",
@@ -448,13 +529,22 @@ namespace StudentHub.Infrastructure.Migrations
                 name: "Image");
 
             migrationBuilder.DropTable(
+                name: "QuestionTag");
+
+            migrationBuilder.DropTable(
                 name: "Reaction");
+
+            migrationBuilder.DropTable(
+                name: "RefreshToken");
 
             migrationBuilder.DropTable(
                 name: "Reply");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Tag");
 
             migrationBuilder.DropTable(
                 name: "Comment");

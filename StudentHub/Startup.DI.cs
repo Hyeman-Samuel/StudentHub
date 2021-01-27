@@ -8,6 +8,7 @@ using StudentHub.Services.DtoMapper.Interface;
 using StudentHub.Services.DtoMapper.Service;
 using StudentHub.Services.Question;
 using StudentHub.Services.Solution;
+using StudentHub.Services.Tag;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,20 +24,24 @@ namespace StudentHub
         {
             AddSwagger(services);
             AddMapper(services);
+            AddServices(services);           
+        }
+
+        private void AddServices(IServiceCollection services)
+        {
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ISolutionService, SolutionService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IOcrScanner, OcrScanner>();
-            
-            
+            services.AddScoped<ITagService, TagService>();
         }
-
         private void AddMapper(IServiceCollection services)
         {
             services.AddScoped<IQuestionMapper, QuestionMapper>();
             services.AddScoped<ICommentMapper, CommentMapper>();
             services.AddScoped<ISolutionMapper, SolutionMapper>();
+            services.AddScoped<ITagMapper, TagMapper>();
 
         }
         private void AddSwagger(IServiceCollection services)

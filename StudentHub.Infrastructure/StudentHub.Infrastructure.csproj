@@ -7,10 +7,28 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200820223246_Init.cs" />
     <Compile Remove="Migrations\20200820223246_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200820224251_Init.cs" />
+    <Compile Remove="Migrations\20200820224251_Init.Designer.cs" />
     <Compile Remove="Migrations\20200821121522_Init2.cs" />
     <Compile Remove="Migrations\20200821121522_Init2.Designer.cs" />
+    <Compile Remove="Migrations\20201103104030_check.cs" />
+    <Compile Remove="Migrations\20201103104030_check.Designer.cs" />
     <Compile Remove="Migrations\20201108131434_Post_Author_Adjustment.cs" />
     <Compile Remove="Migrations\20201108131434_Post_Author_Adjustment.Designer.cs" />
+    <Compile Remove="Migrations\20210127132536_tagsAdded.cs" />
+    <Compile Remove="Migrations\20210127132536_tagsAdded.Designer.cs" />
+    <Compile Remove="Migrations\20210127133033_TabsAdded.cs" />
+    <Compile Remove="Migrations\20210127133033_TabsAdded.Designer.cs" />
+    <Compile Remove="Migrations\20210127135047_AddTags.cs" />
+    <Compile Remove="Migrations\20210127135047_AddTags.Designer.cs" />
+    <Compile Remove="Migrations\20210127140229_Addtags.cs" />
+    <Compile Remove="Migrations\20210127140229_Addtags.Designer.cs" />
+    <Compile Remove="Migrations\20210127140848_Addtest.cs" />
+    <Compile Remove="Migrations\20210127140848_Addtest.Designer.cs" />
+    <Compile Remove="Migrations\20210127141045_Initial.cs" />
+    <Compile Remove="Migrations\20210127141045_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20210127141355_Init.cs" />
+    <Compile Remove="Migrations\20210127141355_Init.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
