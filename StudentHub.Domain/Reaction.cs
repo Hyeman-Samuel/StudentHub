@@ -13,7 +13,9 @@ namespace StudentHub.Domain
         public bool IsSoftDelete { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         [Required]
-        public ApplicationUser Responder { get; set; }
+        public string AuthorId { get; set; }
+
+        public ApplicationUser Author { get; set; }
         [Required]
         public Vote Vote { get; set; }
         public Guid? QuestionId { get; set; }

@@ -15,9 +15,5 @@
     <ProjectReference Include="..\StudentHub.Infrastructure\StudentHub.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Reaction\" />
-  </ItemGroup>
-
 
 </Project>

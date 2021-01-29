@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using StudentHub.Infrastructure.Network;
+using StudentHub.Infrastructure.Network.Email;
 using StudentHub.Services.Auth;
 using StudentHub.Services.Comment;
 using StudentHub.Services.DtoMapper.Interface;
@@ -22,6 +24,11 @@ namespace StudentHub
     {
         public void ConfigureDIContainer(IServiceCollection services)
         {
+            var emailConfig = Configuration
+            .GetSection("EmailConfiguration")
+            .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.AddScoped<IEmailSender, EmailSender>();
             AddSwagger(services);
             AddMapper(services);
             AddServices(services);           

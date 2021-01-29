@@ -14,8 +14,9 @@ namespace StudentHub.Services.Auth
 
         Task<ResultModel<AuthResult>> RefreshToken(RefreshTokenDto value);
 
+        Task<ResultModel<PasswordResetTokenHandler>> ValidateEmailAndGetResetPasswordToken(string email);
         ///void ForgotPassword();
-
+        Task<ResultModel<AuthResult>> ResetPassword(PasswordResetModel resetmodel);
 
     }
 }

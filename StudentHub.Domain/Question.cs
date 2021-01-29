@@ -26,14 +26,14 @@ namespace StudentHub.Domain
         public IEnumerable<Comment> Comments { get; set; }
         public IEnumerable<Solution> Solutions { get; set; }        
         public IEnumerable<Reaction> Reactions { get; set; }
-        public IEnumerable<QuestionTag> Questions { get; set; }
+        public IEnumerable<QuestionTag> Tags { get; set; }
         public Question()
         {
             this.Images = new List<Image>();
             this.Comments = new List<Comment>();
             this.Solutions = new List<Solution>();
             this.Reactions = new List<Reaction>();
-            this.Questions = new List<QuestionTag>();
+            this.Tags = new List<QuestionTag>();
         }
     }
 }

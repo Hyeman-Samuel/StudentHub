@@ -36,9 +36,15 @@ namespace StudentHub
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedEmail = true;
+                options.Password.RequiredLength = 7;
+                options.Password.RequireDigit = false;
+                options.Password.RequireUppercase = false;
+                options.User.RequireUniqueEmail = true;
             })
                   .AddEntityFrameworkStores<ApplicationDBContext>()
                   .AddDefaultTokenProviders();
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+                options.TokenLifespan = TimeSpan.FromHours(2));
             AddJwtAuthentication(services);
             ConfigureDIContainer(services);
         }

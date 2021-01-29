@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudentHub.Core.Asp.NetCore;
+using StudentHub.Domain.Identity;
+using StudentHub.Infrastructure.Network.Email;
 using StudentHub.Services.Auth;
 using System;
 using System.Collections.Generic;
@@ -15,9 +18,11 @@ namespace StudentHub.API.Controllers
     public class AuthController : BaseController
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly IEmailSender _emailSender;
+        public AuthController(IAuthService authService,IEmailSender emailSender)
         {
             _authService = authService;
+            _emailSender = emailSender;
         }
 
 
@@ -89,19 +94,47 @@ namespace StudentHub.API.Controllers
             return Response<AuthResult>(data: result.Data);
         }
 
+
+
+
         [HttpGet]
-        [Route("ResetPassword")]
-        public IActionResult ResetPassword(string username)
+        [Route("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(string email)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+                return Response<string>(codes: ApiResponseCode.INVALID_REQUEST, errors: ListModelStateErrors.ToArray());
+            var result = await _authService.ValidateEmailAndGetResetPasswordToken(email);
+            if (result.HasError)
+            {
+                return Response<string>(codes: ApiResponseCode.NOTFOUND, errors: ListModelStateErrors.ToArray());
+            }
+            var callback = Url.Link("https://client.com/route", new { result.Data.Token, email = result.Data.Email });
+            var message = new Message(new string[] { result.Data.Email }, "Reset password token","Reset your password <p>"+callback+"</p>");
+             _emailSender.SendEmail(message);
+            return Response<string>(data:"done" ,message:"You received an email");
+
         }
 
-        [HttpPut]
-        [Route("PasswordResetRedirect")]
-        public IActionResult PasswordResetRedirect([FromBody]string Email)
+
+
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(PasswordResetModel resetModel)
         {
-            return Ok();
+            if (!ModelState.IsValid)
+                return Response<string>(codes: ApiResponseCode.INVALID_REQUEST, errors: ListModelStateErrors.ToArray());
+            var result = await _authService.ResetPassword(resetModel);
+
+            if (result.HasError)
+            {
+                return Response<string>(codes: ApiResponseCode.NOTFOUND, errors: result.Errors);
+            }
+
+            return Response<string>(data: "done", message: "Password Reset");
         }
+
+
+
 
 
 

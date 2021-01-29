@@ -7,6 +7,7 @@ using StudentHub.Services.Image;
 using StudentHub.Services.Question;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,6 +54,7 @@ namespace StudentHub.Services.DtoMapper.Service
 
         public QuestionResponseDto ToResponseDto(Domain.Question model)
         {
+            //var tags = model.Tags.Select(x => new { x.Tag });
             var images = new List<ImageResponseDto>();
             foreach (var Image in model.Images)
             {

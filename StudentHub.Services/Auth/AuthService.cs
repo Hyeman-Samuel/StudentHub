@@ -144,30 +144,52 @@ namespace StudentHub.Services.Auth
             return result;
         }
 
-        public async Task<ResultModel<string>> SendChangePasswordRedirectRoute()
+        public async Task<ResultModel<PasswordResetTokenHandler>> ValidateEmailAndGetResetPasswordToken(string email)
         {
-            var result = new ResultModel<string>();
+            var result = new ResultModel<PasswordResetTokenHandler>();
+            var user = await userManager.FindByEmailAsync(email);
+            if (user == null)
+            {           
+                result.AddError("User Not Found");
+                return result;
+            }
+
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            result.Data = new PasswordResetTokenHandler {Token = token, Email = user.Email};
             return result;
 
         }
 
-        public async Task<ResultModel<string>> PasswordReset(NewPasswordModel newPassword)
+        public async Task<ResultModel<AuthResult>> ResetPassword(PasswordResetModel resetModel)
         {
-            var result = new ResultModel<string>();
-            if(newPassword.NewPassword != newPassword.NewPasswordConfirmation)
-            {
-                result.AddError("Confirmation Password incorrect");
-            }
+            var result = new ResultModel<AuthResult>();
             try
             {
-                //userManager.ChangePasswordAsync()
+                var user = await userManager.FindByEmailAsync(resetModel.Email);
+                if (user == null) {
+                    result.AddError("User Not Found");
+                    return result;
+                }
+                   
+                var resetPassResult = await userManager.ResetPasswordAsync(user, resetModel.Token, resetModel.Password);
+                if (!resetPassResult.Succeeded)
+                {
+                    foreach (var error in resetPassResult.Errors)
+                    {
+                        result.AddError(error.Code + " :" + error.Description);
+                    }
+                    return result;
+                }
+
+               var authResult = await GenerateJWTToken(user);
+                    result.Data = authResult;
+                    return result;
             }
             catch (Exception ex)
             {
 
                 throw;
             }
-            return result;
         }
 
 

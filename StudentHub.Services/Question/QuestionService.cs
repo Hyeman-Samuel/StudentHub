@@ -33,7 +33,20 @@ namespace StudentHub.Services.Question
             }
             try
             {
+                var questionTags = new List<Domain.Join.QuestionTag>();
+                foreach (var tagId in question.TagIds)
+                {
+                    var questionTag = new Domain.Join.QuestionTag
+                    {
+                        Id = Guid.NewGuid(),
+                        QuestionId = Question.Id,
+                        TagId = tagId
+                    };
+                    questionTags.Add(questionTag);
+                }
                 await _applicationDBContext.Question.AddAsync(Question);
+                await _applicationDBContext.QuestionTag.AddRangeAsync(questionTags);
+                
                 await _applicationDBContext.SaveChangesAsync();
                 resultModel.Data = Question.Id.ToString();
             }catch(Exception e)
