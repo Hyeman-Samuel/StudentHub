@@ -30,7 +30,7 @@ namespace StudentHub.Services.Reply
             else
             {
                 var reply = await _replyMapper.ToModel(replyDto);
-                _applicationDbContext.Add(reply);
+                _applicationDbContext.Reply.Add(reply);
                 await _applicationDbContext.SaveChangesAsync();
                 resultModel.Data = reply.Id.ToString();
             }

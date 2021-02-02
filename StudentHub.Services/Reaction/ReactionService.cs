@@ -2,6 +2,7 @@
 using StudentHub.Services.ResultModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,11 @@ namespace StudentHub.Services.Reaction
             }
             else
             {
+                var existingReaction = _applicationDbContext.Reaction.Where(x => x.QuestionId == questionId).Where(x => x.AuthorId == authorId);
+                if (existingReaction.Count() != 0)
+                {
+                    _applicationDbContext.Reaction.RemoveRange(existingReaction);
+                }
                 var reaction = new Domain.Reaction
                 {
                     Id = Guid.NewGuid(),
@@ -48,6 +54,11 @@ namespace StudentHub.Services.Reaction
             }
             else
             {
+                var existingReaction = _applicationDbContext.Reaction.Where(x => x.SolutionId == solutionId).Where(x => x.AuthorId == authorId);
+                if (existingReaction.Count() != 0) 
+                {
+                    _applicationDbContext.Reaction.RemoveRange(existingReaction);
+                }
                 var reaction = new Domain.Reaction
                 {
                     Id = Guid.NewGuid(),
@@ -71,6 +82,11 @@ namespace StudentHub.Services.Reaction
             }
             else
             {
+                var existingReaction = _applicationDbContext.Reaction.Where(x => x.QuestionId == questionId).Where(x => x.AuthorId == authorId);
+                if (existingReaction.Count() != 0)
+                {
+                    _applicationDbContext.Reaction.RemoveRange(existingReaction);
+                }
                 var reaction = new Domain.Reaction
                 {
                     Id = Guid.NewGuid(),
@@ -94,6 +110,11 @@ namespace StudentHub.Services.Reaction
             }
             else
             {
+                var existingReaction = _applicationDbContext.Reaction.Where(x => x.SolutionId == solutionId).Where(x => x.AuthorId == authorId);
+                if (existingReaction.Count() != 0) 
+                {
+                    _applicationDbContext.Reaction.RemoveRange(existingReaction);
+                }
                 var reaction = new Domain.Reaction
                 {
                     Id = Guid.NewGuid(),

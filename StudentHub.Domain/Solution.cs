@@ -19,7 +19,7 @@ namespace StudentHub.Domain
         public string AuthorId { get; set; }
 
         public ApplicationUser Author { get; set; }
-        public Guid QuestionId { get; set; }
+        public Guid? QuestionId { get; set; }
         public Question Question { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
         public IEnumerable<Image> Images { get; set; }

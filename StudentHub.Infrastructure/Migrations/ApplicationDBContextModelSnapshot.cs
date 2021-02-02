@@ -389,6 +389,10 @@ namespace StudentHub.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -398,10 +402,6 @@ namespace StudentHub.Infrastructure.Migrations
                     b.Property<Guid?>("QuestionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ResponderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<Guid?>("SolutionId")
                         .HasColumnType("uniqueidentifier");
 
@@ -410,9 +410,9 @@ namespace StudentHub.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId");
+                    b.HasIndex("AuthorId");
 
-                    b.HasIndex("ResponderId");
+                    b.HasIndex("QuestionId");
 
                     b.HasIndex("SolutionId");
 
@@ -475,7 +475,7 @@ namespace StudentHub.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("QuestionId")
+                    b.Property<Guid?>("QuestionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TimeAdded")
@@ -576,8 +576,7 @@ namespace StudentHub.Infrastructure.Migrations
 
                     b.HasOne("StudentHub.Domain.Question", "Question")
                         .WithMany("Comments")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .HasForeignKey("QuestionId");
 
                     b.HasOne("StudentHub.Domain.Solution", "Solution")
                         .WithMany("Comments")
@@ -598,7 +597,7 @@ namespace StudentHub.Infrastructure.Migrations
             modelBuilder.Entity("StudentHub.Domain.Join.QuestionTag", b =>
                 {
                     b.HasOne("StudentHub.Domain.Question", "Question")
-                        .WithMany("Questions")
+                        .WithMany("Tags")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -621,15 +620,15 @@ namespace StudentHub.Infrastructure.Migrations
 
             modelBuilder.Entity("StudentHub.Domain.Reaction", b =>
                 {
+                    b.HasOne("StudentHub.Domain.Identity.ApplicationUser", "Author")
+                        .WithMany("ReactionsMade")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StudentHub.Domain.Question", "Question")
                         .WithMany("Reactions")
                         .HasForeignKey("QuestionId");
-
-                    b.HasOne("StudentHub.Domain.Identity.ApplicationUser", "Responder")
-                        .WithMany("ReactionsMade")
-                        .HasForeignKey("ResponderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("StudentHub.Domain.Solution", "Solution")
                         .WithMany("Reactions")
@@ -646,8 +645,7 @@ namespace StudentHub.Infrastructure.Migrations
 
                     b.HasOne("StudentHub.Domain.Comment", "CommentRepliedTo")
                         .WithMany("Replies")
-                        .HasForeignKey("CommentRepliedToId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .HasForeignKey("CommentRepliedToId");
                 });
 
             modelBuilder.Entity("StudentHub.Domain.Solution", b =>
@@ -660,9 +658,7 @@ namespace StudentHub.Infrastructure.Migrations
 
                     b.HasOne("StudentHub.Domain.Question", "Question")
                         .WithMany("Solutions")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .HasForeignKey("QuestionId");
                 });
 #pragma warning restore 612, 618
         }

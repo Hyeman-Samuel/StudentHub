@@ -9,6 +9,7 @@ using StudentHub.Services.Comment;
 using StudentHub.Services.DtoMapper.Interface;
 using StudentHub.Services.DtoMapper.Service;
 using StudentHub.Services.Question;
+using StudentHub.Services.Reply;
 using StudentHub.Services.Solution;
 using StudentHub.Services.Tag;
 using System;
@@ -42,6 +43,7 @@ namespace StudentHub
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IOcrScanner, OcrScanner>();
             services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IReplyService, ReplyService>();
         }
         private void AddMapper(IServiceCollection services)
         {
@@ -49,6 +51,7 @@ namespace StudentHub
             services.AddScoped<ICommentMapper, CommentMapper>();
             services.AddScoped<ISolutionMapper, SolutionMapper>();
             services.AddScoped<ITagMapper, TagMapper>();
+            services.AddScoped<IReplyMapper, ReplyMapper>();
 
         }
         private void AddSwagger(IServiceCollection services)

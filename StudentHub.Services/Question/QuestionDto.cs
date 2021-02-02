@@ -43,12 +43,12 @@ namespace StudentHub.Services.Question
         public string TimeAdded { get; set; }
         public string AuthorId { get; set; }
         public List<ImageResponseDto> Images { get; set; }
-        public List<TagResponseDto> TagResponseDtos { get; set; }
+        public List<TagResponseDto> Tags { get; set; }
 
         public QuestionResponseDto()
         {
             this.Images = new List<ImageResponseDto>();
-            this.TagResponseDtos = new List<TagResponseDto>();
+            this.Tags = new List<TagResponseDto>();
         }
 
     }

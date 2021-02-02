@@ -35,7 +35,7 @@ namespace StudentHub.API.Controllers
                 return Response<string>(data: null, message: "", ApiResponseCode.INVALID_REQUEST, errors: ListModelStateErrors.ToArray());              
             }
             var currentUser = HttpContext.User;
-            questionDto.AuthorId = currentUser.FindFirst("UserId").Value; ; 
+            questionDto.AuthorId = currentUser.FindFirst("UserId").Value;  
             try
             {
                 var result = await _questionService.AddQuestion(questionDto);

@@ -31,7 +31,7 @@ namespace StudentHub.Services.Solution
         public string Message { get; set; }
         public string TimeAdded { get; set; }
         public string AuthorId { get; set; }
-        public Guid QuestionId { get; set; }
+        public Guid? QuestionId { get; set; }
         public List<ImageResponseDto> Images { get; set; }
 
         public SolutionResponseDto()

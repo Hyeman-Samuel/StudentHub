@@ -54,7 +54,7 @@ namespace StudentHub.Services.DtoMapper.Service
 
         public QuestionResponseDto ToResponseDto(Domain.Question model)
         {
-            //var tags = model.Tags.Select(x => new { x.Tag });
+            var tags = model.Tags.Select(x => new { x.Tag });
             var images = new List<ImageResponseDto>();
             foreach (var Image in model.Images)
             {

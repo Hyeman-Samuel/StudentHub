@@ -245,7 +245,7 @@ namespace StudentHub.Infrastructure.Migrations
                     Message = table.Column<string>(nullable: false),
                     TimeAdded = table.Column<string>(nullable: false),
                     AuthorId = table.Column<string>(nullable: false),
-                    QuestionId = table.Column<Guid>(nullable: false)
+                    QuestionId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -336,7 +336,7 @@ namespace StudentHub.Infrastructure.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     IsSoftDelete = table.Column<bool>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    ResponderId = table.Column<string>(nullable: false),
+                    AuthorId = table.Column<string>(nullable: false),
                     Vote = table.Column<int>(nullable: false),
                     QuestionId = table.Column<Guid>(nullable: true),
                     SolutionId = table.Column<Guid>(nullable: true)
@@ -345,17 +345,17 @@ namespace StudentHub.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Reaction", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Reaction_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Reaction_Question_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Question",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reaction_AspNetUsers_ResponderId",
-                        column: x => x.ResponderId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reaction_Solution_SolutionId",
                         column: x => x.SolutionId,
@@ -473,14 +473,14 @@ namespace StudentHub.Infrastructure.Migrations
                 column: "TagId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reaction_AuthorId",
+                table: "Reaction",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reaction_QuestionId",
                 table: "Reaction",
                 column: "QuestionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reaction_ResponderId",
-                table: "Reaction",
-                column: "ResponderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reaction_SolutionId",

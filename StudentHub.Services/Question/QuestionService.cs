@@ -3,6 +3,7 @@ using StudentHub.Infrastructure.Data;
 using StudentHub.Infrastructure.Extensions;
 using StudentHub.Services.DtoMapper.Interface;
 using StudentHub.Services.ResultModel;
+using StudentHub.Services.Tag;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +16,13 @@ namespace StudentHub.Services.Question
     {
         private readonly ApplicationDBContext _applicationDBContext;
         private readonly IQuestionMapper _questionMapper;
+        private readonly ITagMapper _tagMapper;
 
-
-        public QuestionService(ApplicationDBContext applicationDbContext,IQuestionMapper questionMapper)
+        public QuestionService(ApplicationDBContext applicationDbContext,IQuestionMapper questionMapper,ITagMapper tagMapper)
         {
             _applicationDBContext = applicationDbContext;
-            _questionMapper = questionMapper;           
+            _questionMapper = questionMapper;
+            _tagMapper = tagMapper;
         }
 
         public async Task<ResultModel<string>> AddQuestion(QuestionDto question)
@@ -64,7 +66,16 @@ namespace StudentHub.Services.Question
             try
             {
                 _applicationDBContext.Question.Remove(question);
-                await _applicationDBContext.SaveChangesAsync();
+                _applicationDBContext.BeginTransaction();
+                try
+                {    
+                    await _applicationDBContext.SaveChangesAsync();
+                }
+                catch(Exception ex)
+                {
+                    _applicationDBContext.Rollback();
+                }
+                
             }
             catch(Exception e)
             {
@@ -108,6 +119,17 @@ namespace StudentHub.Services.Question
                 var _question = await _applicationDBContext.Set<Domain.Question>().FindAsync(questionId);
                 await _applicationDBContext.SaveChangesAsync();
                 var questionResponse = _questionMapper.ToResponseDto(_question);
+                ////I feel this should be in the ToResponseDto method 
+                var tagIds = _applicationDBContext.QuestionTag.Where(x => x.QuestionId == _question.Id).Select(x=>x.TagId).ToList();
+                var tagResponseDtos = new List<TagResponseDto>();
+                foreach (var id in tagIds)
+                {
+                  var tag = await _applicationDBContext.Tag.FindAsync(id);
+                  tagResponseDtos.Add(_tagMapper.ToResponseDto(tag));
+                }
+                questionResponse.Tags = tagResponseDtos;
+
+                /////
                 resultModel.Data = questionResponse;               
             }
             catch(Exception e)

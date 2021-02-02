@@ -7,7 +7,7 @@ using System.Text;
 
 namespace StudentHub.Infrastructure
 {
-   public class ApplicationDBContext:IdentityDbContext<Domain.Identity.ApplicationUser>
+   public partial class ApplicationDBContext:IdentityDbContext<Domain.Identity.ApplicationUser>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
@@ -29,19 +29,6 @@ namespace StudentHub.Infrastructure
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Solution>()
-                .HasOne(x => x.Question)
-                .WithMany(x => x.Solutions)
-                .OnDelete(DeleteBehavior.ClientCascade);
-            builder.Entity<Comment>()
-                .HasOne(x => x.Question)
-                .WithMany(x => x.Comments)
-                .OnDelete(DeleteBehavior.ClientCascade);
-            builder.Entity<Comment>()
-                .HasMany(x => x.Replies)
-                .WithOne(x => x.CommentRepliedTo)
-                .HasForeignKey(x => x.CommentRepliedToId)
-                .OnDelete(DeleteBehavior.ClientCascade);
         }
 
     }

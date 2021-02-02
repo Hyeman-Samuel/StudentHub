@@ -78,14 +78,15 @@ namespace StudentHub.API.Controllers
         /// Post Reply
         /// </summary>
         [HttpPost]
-        [Route("{replyId}")]
+        [Route("")]
         public async Task<IActionResult> AddReply([FromBody]ReplyDto replyDto)
         {
             if (replyDto == null)
             {
                 return Response<string>(data: null, message: "Error", ApiResponseCode.INVALID_REQUEST);
             }
-
+            var currentUser = HttpContext.User;
+            replyDto.AuthorId = currentUser.FindFirst("UserId").Value;
             try
             {
                 var result = await _replyService.AddReply(replyDto);
@@ -97,7 +98,7 @@ namespace StudentHub.API.Controllers
             }
             catch (Exception e)
             {
-                return Response<string>(data: null, message: "Internal Server Error" + e.Message, codes: ApiResponseCode.ERROR);
+                return Response<string>(data: null, message: "Internal Server Error :" + e.Message + ". Inner Exception: "+e.InnerException, codes: ApiResponseCode.ERROR);
             }
         }
 
