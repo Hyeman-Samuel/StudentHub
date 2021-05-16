@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentHub.Infrastructure.Network
+namespace StudentHub.Infrastructure.Network.Ocr
 {
     public interface IOcrScanner
     {

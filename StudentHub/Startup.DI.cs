@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using StudentHub.Infrastructure.Network;
 using StudentHub.Infrastructure.Network.Email;
+using StudentHub.Infrastructure.Network.Ocr;
 using StudentHub.Services.Auth;
 using StudentHub.Services.Comment;
 using StudentHub.Services.DtoMapper.Interface;
