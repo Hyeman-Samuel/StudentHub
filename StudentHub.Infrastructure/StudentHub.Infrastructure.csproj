@@ -41,6 +41,8 @@
     <Compile Remove="Migrations\20210131144645_Init.Designer.cs" />
     <Compile Remove="Migrations\20210131145137_Init.cs" />
     <Compile Remove="Migrations\20210131145137_Init.Designer.cs" />
+    <Compile Remove="Migrations\20210520113516_check.cs" />
+    <Compile Remove="Migrations\20210520113516_check.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +57,10 @@
   <ItemGroup>
     <ProjectReference Include="..\StudentHub.Common\StudentHub.Core.csproj" />
     <ProjectReference Include="..\StudentHub.Domain\StudentHub.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Mapping\" />
   </ItemGroup>
 
 </Project>

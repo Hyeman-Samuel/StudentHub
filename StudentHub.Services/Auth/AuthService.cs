@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using StudentHub.Domain.Identity;
 using StudentHub.Infrastructure;
+using StudentHub.Infrastructure.Data;
 using StudentHub.Services.ResultModel;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,20 @@ namespace StudentHub.Services.Auth
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> userManager;
+        
         private readonly ApplicationDBContext context;
         private readonly TokenValidationParameters tokenValidationParameters;
+        private readonly RoleManager<IdentityRole> roleManager;
 
-        public AuthService(UserManager<ApplicationUser> _userManager,ApplicationDBContext _context,TokenValidationParameters _tokenValidationParameters)
+        public AuthService(UserManager<ApplicationUser> _userManager,
+            ApplicationDBContext _context,
+            TokenValidationParameters _tokenValidationParameters,
+            RoleManager<IdentityRole> _roleManager)
         {
             userManager = _userManager;
             context = _context;
             tokenValidationParameters = _tokenValidationParameters;
+            roleManager = _roleManager;
         }
         public async Task<ResultModel<AuthResult>> LoginIn(LoginModel loginModel)
         {
@@ -112,7 +119,7 @@ namespace StudentHub.Services.Auth
             return result;
         }
 
-        public async Task<ResultModel<AuthResult>> SignUp(SignUpModel model)
+        public async Task<ResultModel<AuthResult>> SignUp(SignUpModel model,string role)
         {
             var result = new ResultModel<AuthResult>();
             if (String.IsNullOrEmpty(model.Email) || String.IsNullOrEmpty(model.Password))
@@ -125,10 +132,35 @@ namespace StudentHub.Services.Auth
             UserName = model.Username};
             try
             {
-            var _user = await userManager.CreateAsync(user, model.Password);
-                if (_user.Succeeded)
+                if (roleManager.FindByNameAsync(role) == null)
                 {
-                    result.Data = await GenerateJWTToken(user);
+                   await roleManager.CreateAsync(new IdentityRole(role));                  
+                }; 
+
+            var _user = await userManager.CreateAsync(user, model.Password);
+                
+                
+               
+                if (_user.Succeeded)
+                {    
+                    var addedToRow = await userManager.AddToRoleAsync(user, role);
+                    if (!addedToRow.Succeeded)
+                {
+                    foreach (var error in addedToRow.Errors)
+                    {
+                       var deleteUser = await userManager.DeleteAsync(user);
+                            if (!deleteUser.Succeeded)
+                            {
+                                deleteUser = await userManager.DeleteAsync(user);
+                            }
+                        result.AddError("Server Error:" + error.Description);
+                    }
+                    }
+                    else
+                    {
+                      result.Data = await GenerateJWTToken(user);
+                    }
+
                 } else {
                     foreach (var error in _user.Errors)
                     {

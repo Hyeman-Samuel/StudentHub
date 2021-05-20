@@ -8,7 +8,7 @@ namespace StudentHub.Services.Auth
 {
     public interface IAuthService
     {
-        Task<ResultModel<AuthResult>> SignUp(SignUpModel model);
+        Task<ResultModel<AuthResult>> SignUp(SignUpModel model,string role);
 
         Task<ResultModel<AuthResult>> LoginIn(LoginModel model);
 

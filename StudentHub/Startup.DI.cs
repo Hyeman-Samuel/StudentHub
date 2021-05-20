@@ -25,25 +25,33 @@ namespace StudentHub
     {
         public void ConfigureDIContainer(IServiceCollection services)
         {
-            var emailConfig = Configuration
-            .GetSection("EmailConfiguration")
-            .Get<EmailConfiguration>();
-            services.AddSingleton(emailConfig);
-            services.AddScoped<IEmailSender, EmailSender>();
+            AddSingletonServices(services);
             AddSwagger(services);
             AddMapper(services);
-            AddServices(services);           
+            AddScopedServices(services);           
         }
 
-        private void AddServices(IServiceCollection services)
+        private void AddScopedServices(IServiceCollection services)
         {
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ISolutionService, SolutionService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IOcrScanner, OcrScanner>();
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IReplyService, ReplyService>();
+        }
+        private void AddSingletonServices(IServiceCollection services)
+        {
+            var emailConfig = Configuration
+             .GetSection("EmailConfiguration")
+             .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            var ocrConfig = Configuration
+            .GetSection("OcrConfiguration")
+            .Get<OcrConfiguration>();
+            services.AddSingleton(ocrConfig);
         }
         private void AddMapper(IServiceCollection services)
         {

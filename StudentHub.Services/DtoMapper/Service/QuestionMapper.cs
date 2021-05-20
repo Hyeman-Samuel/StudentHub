@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 using StudentHub.Domain.Identity;
-using StudentHub.Infrastructure.Network;
+using StudentHub.Infrastructure.Network.Ocr;
 using StudentHub.Services.DtoMapper.Interface;
 using StudentHub.Services.Image;
 using StudentHub.Services.Question;
@@ -61,6 +61,7 @@ namespace StudentHub.Services.DtoMapper.Service
                 if (Image.ImageLink == null)
                 {
                     return null;
+                    ////This should be an error 
                 }
 
                 var image = new ImageResponseDto

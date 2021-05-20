@@ -1,4 +1,4 @@
-﻿using StudentHub.Infrastructure.Network;
+﻿using StudentHub.Infrastructure.Network.Ocr;
 using StudentHub.Services.DtoMapper.Interface;
 using StudentHub.Services.Image;
 using StudentHub.Services.Solution;

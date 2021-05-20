@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudentHub.Core.Asp.NetCore;
 using StudentHub.Domain.Identity;
+using StudentHub.Infrastructure.Data;
 using StudentHub.Infrastructure.Network.Email;
 using StudentHub.Services.Auth;
 using System;
@@ -61,7 +62,7 @@ namespace StudentHub.API.Controllers
             }
             try
             {
-                var result = await _authService.SignUp(signUpModel);
+                var result = await _authService.SignUp(signUpModel,Roles.User);
                 if (result.HasError)
                 {
                     return Response<string>(codes: ApiResponseCode.ERROR, errors: result.Errors);
